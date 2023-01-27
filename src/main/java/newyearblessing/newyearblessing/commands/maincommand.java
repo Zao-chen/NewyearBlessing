@@ -26,6 +26,8 @@ public class maincommand implements CommandExecutor {
     {
         Plugin plugin = newyearblessing.newyearblessing.NewyearBlessing.getProvidingPlugin(newyearblessing.newyearblessing.NewyearBlessing.class);
         String messagefront = plugin.getConfig().getString("message-front");
+        String messagenohd = plugin.getConfig().getString("message-nohd");
+        
         if(strings.length == 0)
         {
             String messageerror = plugin.getConfig().getString("message-error");
@@ -39,17 +41,18 @@ public class maincommand implements CommandExecutor {
             if (Message0.equals("add"))
             {
                 /*检查月*/
-                String month = plugin.getConfig().getString("use-month");
+                int month = plugin.getConfig().getInt("use-month");
                 Calendar calendar = Calendar.getInstance();
-                String month_now = calendar.get(Calendar.MONTH) + 1 +"";
-                if(!month.equals(month_now));
+                int month_now = calendar.get(Calendar.MONTH) + 1;
+                if(month!=month_now)
                 {
-                    if (!month.equals("all")) {
+                    if (month!=0) {
                         String messagetime = plugin.getConfig().getString("message-notime");
                         commandSender.sendMessage(ChatColor.YELLOW + messagefront + ChatColor.RED + messagetime);
                         return false;
                     }
                 }
+
                 /*更新文件*/
                 Plugin plugin2 = newyearblessing.newyearblessing.NewyearBlessing.getPlugin(newyearblessing.newyearblessing.NewyearBlessing.class);
                 String Message1 = strings[1];
@@ -75,7 +78,8 @@ public class maincommand implements CommandExecutor {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(),reward);
                 /*更新hd*/
                 if (!Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
-                    commandSender.sendMessage("未发现HolographicDisplays");
+                    commandSender.sendMessage(ChatColor.YELLOW + messagefront + ChatColor.RED + messagenohd);
+                    
                     return false;
                 }
                 if(!plugin.getConfig().getLocation("local").equals("null")) {
@@ -147,7 +151,7 @@ public class maincommand implements CommandExecutor {
             {
                 if (commandSender.hasPermission("newyearblessing.commands.createhd")) {
                     if (!Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
-                        commandSender.sendMessage("未发现HolographicDisplays");
+                        commandSender.sendMessage(ChatColor.YELLOW + messagefront + ChatColor.RED + messagenohd);
                         return false;
                     }
                     Plugin plugin2 = newyearblessing.newyearblessing.NewyearBlessing.getPlugin(newyearblessing.newyearblessing.NewyearBlessing.class);
@@ -176,7 +180,7 @@ public class maincommand implements CommandExecutor {
             {
                 if (commandSender.hasPermission("newyearblessing.commands.createhd")) {
                     if (!Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
-                        commandSender.sendMessage("未发现HolographicDisplays");
+                        commandSender.sendMessage(ChatColor.YELLOW + messagefront + ChatColor.RED + messagenohd);
                         return false;
                     }
                     Plugin plugin2 = newyearblessing.newyearblessing.NewyearBlessing.getPlugin(newyearblessing.newyearblessing.NewyearBlessing.class);
