@@ -1,6 +1,6 @@
 #本插件需要papi,请先在服务器内输入/papi ecloud download Server和/papi ecloud download Player
 version: 1.4
-local: null
+local: "null"
 #这个版本文件请不要乱改！！！！
 message-reload: ' 插件重载成功'
 message-upload: ' 祝福上传成功'
@@ -15,7 +15,13 @@ message-front: '[NewYearBlessing]'
 message-nohd: '未发现hd插件，全息功能关闭'
 #以上是一些语言文件
 use-month: '1'
-#如果不需要的话可以填0
-reward: 'give %player_name% diamond'
 #玩家许愿成功后执行的指令，支持papi
+reward:
+  enable: false
+  commands:
+    - "give {player} diamond"
+lottery:
+  enable: false
+  commands:
+    - "give {player} diamond 64"
 Blessing:

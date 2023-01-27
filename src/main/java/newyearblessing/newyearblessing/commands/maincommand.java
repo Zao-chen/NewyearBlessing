@@ -15,10 +15,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class maincommand implements CommandExecutor {
 
@@ -72,17 +69,22 @@ public class maincommand implements CommandExecutor {
                 String messageup = plugin.getConfig().getString("message-upload");
                 commandSender.sendMessage(ChatColor.YELLOW+messagefront+ChatColor.GREEN+messageup);
                 /*给予奖励*/
-                String reward=plugin.getConfig().getString("reward");
-                Player players=(Player) commandSender;
-                reward = PlaceholderAPI.setPlaceholders(players,reward);
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(),reward);
+                if(plugin.getConfig().getBoolean("reward.enable"))
+                {
+                    List <String> command_list = plugin.getConfig().getStringList("reward.commands");
+                    for(String commands : command_list)
+                    {
+                        commands = commands.replace("{player}",commandSender.getName());
+                        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),commands);
+                    }
+                }
                 /*更新hd*/
                 if (!Bukkit.getPluginManager().isPluginEnabled("HolographicDisplays")) {
                     commandSender.sendMessage(ChatColor.YELLOW + messagefront + ChatColor.RED + messagenohd);
                     
                     return false;
                 }
-                if(!plugin.getConfig().getLocation("local").equals("null")) {
+                if(!Objects.equals(plugin.getConfig().getString("local"), "null")) {
                     HolographicDisplaysAPI api = HolographicDisplaysAPI.get(plugin2); // The API instance for your plugin
                     api.deleteHolograms();
                     api.deleteHolograms();
@@ -234,7 +236,7 @@ public class maincommand implements CommandExecutor {
                             /*随机数生成*/
                             Random r = new Random();
                             r.setSeed(System.currentTimeMillis());
-                            int ran = r.nextInt(join/2+1);
+                            int ran = r.nextInt(join/2);
                             for (Player player : Bukkit.getOnlinePlayers()) {
                                 player.sendTitle(blessing.get(ran*2+1), "§4§l正在抽取玩家"); //title显示
                             }
@@ -258,10 +260,15 @@ public class maincommand implements CommandExecutor {
                             for (Player player : Bukkit.getOnlinePlayers()) {
                                 player.sendTitle("§c§l中奖的是：", get+"："+ temp);
                             }
-                            SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
-                            Date date = new Date(System.currentTimeMillis());
-                            System.out.println(formatter.format(date));
-                            Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),"qq say 恭喜"+get+"中奖！他的愿望是："+temp+"。请凭此消息截图领取奖品！"+formatter.format(date));
+                            if(plugin.getConfig().getBoolean("lottery.enable"))
+                            {
+                                List <String> command_list = plugin.getConfig().getStringList("lottery.commands");
+                                for(String commands : command_list)
+                                {
+                                    commands = commands.replace("{player}",commandSender.getName());
+                                    Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),commands);
+                                }
+                            }
                             cancel();
                             return;
                         }
